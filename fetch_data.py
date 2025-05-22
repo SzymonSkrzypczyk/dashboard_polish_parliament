@@ -9,6 +9,7 @@ BASE_URL = Template("https://api.sejm.gov.pl/sejm/term$term")
 class MP:
     first_name: str
     last_name: str
+    club: str
     active: bool
     educationLevel: str
     profession: str
@@ -70,7 +71,7 @@ def get_votings_per_day(term: int = 10):
         return []
 
 
-def get_members_by_club(club_id: str, term:int = 10):
+def get_members_by_club(club_id: str, term: int = 10):
     response = requests.get(f"{BASE_URL.substitute(term=term)}/MP")
     if response.status_code == 200:
         members = response.json()
