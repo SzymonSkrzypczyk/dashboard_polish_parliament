@@ -1,0 +1,3 @@
+# Just a simple dashboard usign sejm API
+
+## Readme to be done...
