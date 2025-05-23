@@ -25,6 +25,17 @@ def get_clubs(term: int = 10):
         return []
 
 
+def get_timeframe(term: int = 10):
+    response = requests.get(f"{BASE_URL.substitute(term=term)}")
+    if response.status_code == 200:
+        timeframe = response.json()
+        from_date = timeframe["from"]
+        to_date = timeframe.get("to", None)
+        return from_date, to_date
+    else:
+        return
+
+
 def get_all_by_term(term: int = 10):
     response = requests.get(f"{BASE_URL.substitute(term=term)}/MP")
     if response.status_code == 200:
