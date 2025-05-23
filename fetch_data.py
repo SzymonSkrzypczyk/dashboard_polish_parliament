@@ -28,13 +28,14 @@ def get_clubs(term: int = 10):
 
 def get_timeframe(term: int = 10):
     response = requests.get(f"{BASE_URL.substitute(term=term)}")
+    from_date = None
+    to_date = None
     if response.status_code == 200:
         timeframe = response.json()
         from_date = timeframe["from"]
         to_date = timeframe.get("to", None)
-        return from_date, to_date
-    else:
-        return
+
+    return {"from": from_date, "to": to_date}
 
 
 def get_by_term(term: int = 10, target: Literal["MP", "interpellations", "prints", "proceedings"] = "MP"):
