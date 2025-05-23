@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Literal
 from string import Template
 import requests
 
@@ -36,48 +37,11 @@ def get_timeframe(term: int = 10):
         return
 
 
-def get_all_by_term(term: int = 10):
-    response = requests.get(f"{BASE_URL.substitute(term=term)}/MP")
+def get_by_term(term: int = 10, target: Literal["MP", "interpellations", "prints", "proceedings"] = "MP"):
+    response = requests.get(f"{BASE_URL.substitute(term=term)}/{target}")
     if response.status_code == 200:
-        members = response.json()
-        # educationLevel, active, profession, voivodeship
-        return members
-    else:
-        return []
-
-
-def get_all_interpellations(term: int = 10):
-    response = requests.get(f"{BASE_URL.substitute(term=term)}/interpellations")
-    if response.status_code == 200:
-        interpellations = response.json()
-        return interpellations
-    else:
-        return []
-
-
-def get_all_prints(term: int = 10):
-    response = requests.get(f"{BASE_URL.substitute(term=term)}/prints")
-    if response.status_code == 200:
-        prints = response.json()
-        return prints
-    else:
-        return []
-
-
-def get_all_proceedings(term: int = 10):
-    response = requests.get(f"{BASE_URL.substitute(term=term)}/proceedings")
-    if response.status_code == 200:
-        proceedings = response.json()
-        return proceedings
-    else:
-        return []
-
-
-def get_votings_per_day(term: int = 10):
-    response = requests.get(f"{BASE_URL.substitute(term=term)}/proceedings")
-    if response.status_code == 200:
-        proceedings = response.json()
-        return proceedings
+        data = response.json()
+        return data
     else:
         return []
 

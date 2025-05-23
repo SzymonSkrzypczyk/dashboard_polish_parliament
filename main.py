@@ -1,6 +1,6 @@
 import streamlit as st
 import plotly.express as px
-from fetch_data import get_clubs, get_members_by_club, get_all_by_term, get_all_proceedings, get_all_interpellations
+from fetch_data import get_clubs, get_members_by_club, get_by_term
 
 st.set_page_config(layout="wide")
 st.title("Dashboard Sejmu RP")
@@ -10,7 +10,7 @@ club_names = [(club['name'], club["id"]) for club in clubs]
 
 selected_term = st.sidebar.slider("Wybierz kadencje", 1, 10, 10)
 
-all_mps = get_all_by_term(selected_term)
+all_mps = get_by_term(selected_term, "MP")
 all_active = [mp for mp in all_mps if mp["active"] is True]
 mps_by_party = {party_id: len(get_members_by_club(party_id, selected_term)) for _, party_id in club_names}
 
@@ -27,8 +27,8 @@ mps_by_prof = {
     for profession in set(mp["profession"] for mp in all_mps if mp.get("profession"))
 }
 
-all_proceedings = len(get_all_proceedings(selected_term))
-all_interpellations = len(get_all_interpellations(selected_term))
+all_proceedings = len(get_by_term(selected_term, "proceedings"))
+all_interpellations = len(get_by_term(selected_term, "interpellations"))
 
 # --- First row ---
 row1_col1, row1_col2, row1_col3 = st.columns(3)
@@ -123,7 +123,7 @@ with row3_col1:
 with row3_col2:
     st.markdown("### Posłowie według klubów")
     clubs_sorted = sorted(mps_by_party.items(), key=lambda x: x[1], reverse=True)
-    club_labels = [next((name for name, cid in club_names if cid == club_id), club_id) for club_id, _ in clubs_sorted]
+    club_labels = [next((cid for name, cid in club_names if cid == club_id), club_id) for club_id, _ in clubs_sorted]
     fig = px.bar(
         x=[count for _, count in clubs_sorted],
         y=club_labels,
